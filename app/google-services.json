@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "198772319044",
+    "firebase_url": "https://mindmatchapp-default-rtdb.firebaseio.com",
+    "project_id": "mindmatchapp",
+    "storage_bucket": "mindmatchapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198772319044:android:d0b6339473b842c42cad11",
+        "android_client_info": {
+          "package_name": "com.mindmatchapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDigAHxVidWJs-Gxc-eWqQHDlL09wttNuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
