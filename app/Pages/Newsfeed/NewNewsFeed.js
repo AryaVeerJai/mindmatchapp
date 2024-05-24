@@ -514,16 +514,22 @@ const formatTimeAgo = (timestamp) => {
             <Text style={{fontSize: 22, color: isDarkMode ? '#d0d6e1' : '#293241', fontWeight: "500"}}>Your Groups</Text>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{flexDirection:"row", marginTop: 15, overflow: 'scroll'}}>
               <AntIcon name='plus' size={25} style={{padding: 9, backgroundColor:isDarkMode ? '#0C1427' : '#F4F4F5' , borderRadius: 50}} color={isDarkMode ? '#d0d6e1' : 'black'} ></AntIcon>
-              <Text style={{marginHorizontal:15, backgroundColor: "#293241", color:"white", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>All</Text>
-              <Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Baking & Cooking</Text>
-              <Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Croquet</Text>
-              <Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Skydiving</Text>
+              <TouchableOpacity><Text style={{marginHorizontal:15, backgroundColor: "#293241", color:"white", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>All</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Dance</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>DIY</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Entrepreneurship</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Festival</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Movies & Theatre</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>MindMatch</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Painting & Skectching</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Science & Technology</Text></TouchableOpacity>
+              <TouchableOpacity><Text style={{marginRight:15, backgroundColor: isDarkMode ? '#0C1427' : "#F4F4F5", color: isDarkMode ? '#d0d6e1' :"#293241", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 50}}>Social Work</Text></TouchableOpacity>
             </ScrollView>
           </View>
           <View style={[styles.tabsContainer,{backgroundColor: isDarkMode ? '#070D19' : '#fff'}]}>
             <Text style={[styles.tab,{backgroundColor: isDarkMode ? '#0C1427' : '#F4F4F5', color: isDarkMode ? '#d0d6e1' : 'black'}]}>Following</Text>
-            <Text style={styles.tabactive}>Groups</Text>
-            <Text style={[styles.tab,{backgroundColor: isDarkMode ? '#0C1427' : '#F4F4F5', color: isDarkMode ? '#d0d6e1' : 'black'}]}>Create</Text>
+            <Text style={styles.tabactive}>For You</Text>
+            <Text style={[styles.tab,{backgroundColor: isDarkMode ? '#0C1427' : '#F4F4F5', color: isDarkMode ? '#d0d6e1' : 'black'}]}>Opportunity</Text>
           </View>
             {
               sortedPosts.map(item => (
@@ -676,7 +682,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     backgroundColor: '#F4F4F5',
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
     paddingVertical: 6,
     borderRadius: 50,
     color: 'black',
@@ -685,7 +691,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     backgroundColor: '#293241',
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
     paddingVertical: 6,
     borderRadius: 50,
     color: 'white',
