@@ -17,6 +17,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { List } from 'react-native-paper';
 import { SvgXml } from "react-native-svg";
+import Stories from '../../components/Stories';
 
 
 const ProfileNew = ({ navigation }) => {
@@ -352,11 +353,11 @@ const ProfileNew = ({ navigation }) => {
                     <Text style={styles.statLabel}>Posts</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('ProfileFollow', {userId: id})} style={[styles.statItem, {borderRightWidth: 0.2, borderLeftWidth: 0.2, borderColor: '#E6EBEB', paddingHorizontal: 30}]}>
-                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{noOfFollowers}</Text>
+                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{noOfFollowings ? noOfFollowings : 0}</Text>
                     <Text style={styles.statLabel}>Following</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('ProfileFollow', {userId: id})} style={styles.statItem}>
-                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{noOfFollowings}</Text>
+                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{noOfFollowers ? noOfFollowers : 0}</Text>
                     <Text style={styles.statLabel}>Followers</Text>
                     </TouchableOpacity>
             </View>
@@ -369,7 +370,7 @@ const ProfileNew = ({ navigation }) => {
         <View style={{backgroundColor: isDarkMode ? '#2F3131' : 'inherit', marginTop: 12, paddingBottom: 5 }}>
             {/* Story Highlights */}
             <View style={{paddingHorizontal: 20, paddingTop: 20,}}><Text style={{fontSize: 15}}>Recent Updates</Text></View>
-            <ScrollView horizontal style={[styles.highlightsContainer,{paddingHorizontal: 20,}]} showsHorizontalScrollIndicator={false}>
+            {/* <ScrollView horizontal style={[styles.highlightsContainer,{paddingHorizontal: 20,}]} showsHorizontalScrollIndicator={false}>
                 <TouchableOpacity style={styles.storyHighlight}>
                     <FeatherIcon.Button name="plus" 
                     backgroundColor={isDarkMode ? '#ffffff00' : '#fff'} 
@@ -427,15 +428,11 @@ const ProfileNew = ({ navigation }) => {
                 />
                 <Text style={styles.storyName}>Food</Text>
                 </TouchableOpacity>
-        {/* Add more story highlights here */}
-        {/* <TouchableOpacity style={styles.addStoryButton}>
-          <Image
-            source={require('../../../profile.webp')}
-            style={styles.plusIcon}
-          />
-        </TouchableOpacity> */}
-            </ScrollView>
+            </ScrollView> */}
+            <Stories />
         </View>
+
+        
 
             {/* Buttons */}
         <View style={{borderRadius: 15, backgroundColor: isDarkMode ? '#2F3131' : 'inherit', marginTop: 12, paddingTop: 20 }}>

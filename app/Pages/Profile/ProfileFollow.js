@@ -70,8 +70,8 @@ const ProfileFollow = ({route}) => {
     
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
-        { key: 'followers', title: '255 Followers' },
-        { key: 'following', title: '83 Following' },
+        { key: 'following', title: 'Following' },
+        { key: 'followers', title: 'Followers' },
     ]);
     const renderTabBar = props => {
         return (

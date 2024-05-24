@@ -90,7 +90,7 @@ const Stories = () => {
                             activeOpacity={.8}
                             style={styles.storieItem}
                             key={index}> 
-                            <LinearGradient
+                            {/* <LinearGradient
                                 style={styles.storieMedia}
                                 colors={
                                     data.id === "01" ?
@@ -98,8 +98,8 @@ const Stories = () => {
                                     :
                                     ['#FE9063', '#704FFE']
                                 }
-                            >
-                                <View style={{backgroundColor:colors.background,height:66,width:66,borderRadius:24,alignItems:'center',justifyContent:'center'}}>
+                            > */}
+                                <View style={{backgroundColor:colors.background,borderRadius:24,alignItems:'center',justifyContent:'center'}}>
                                     {data.id === "01" &&
                                         <View
                                             style={{
@@ -125,8 +125,8 @@ const Stories = () => {
                                         source={data.image}
                                     />
                                 </View>
-                            </LinearGradient>
-                            <Text style={[FONTS.font,{color:colors.text}]}>{data.name}</Text>
+                            {/* </LinearGradient> */}
+                            <Text style={[FONTS.font,{color:colors.text, fontSize: 12}]}>{data.name}</Text>
                         </TouchableOpacity>
                     )
                 })}
@@ -147,13 +147,14 @@ const styles = StyleSheet.create({
         justifyContent:'center',
     },
     storieProfile:{
-        height:58,
-        width:58,
-        borderRadius:18,
+        height:50,
+        width:50,
+        borderRadius:15,
         resizeMode:'cover',
     },
     storieItem:{
-        marginRight:10,
+        marginLeft:5,
+        marginRight: 15,
         alignItems:'center',
     }
 })

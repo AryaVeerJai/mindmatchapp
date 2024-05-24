@@ -39,6 +39,7 @@ import { SvgXml } from "react-native-svg";
 import { COLORS, FONTS, ICONS, IMAGES, SIZES } from "../../constants/theme";
 import CreateSheet from '../../components/ActionSheet/CreateSheet';
 import Auth from '../../Service/Auth';
+import { formatDistanceToNow } from 'date-fns';
 
 function Section({ children, title }) {
     const {colors} = useTheme();
@@ -301,6 +302,30 @@ function NewNewsfeed({ navigation }) {
     "Something else"
 ];
 
+const formatTimeAgo = (timestamp) => {
+  const distance = formatDistanceToNow(new Date(timestamp), { addSuffix: false });
+
+  const now = new Date();
+  const past = new Date(timestamp);
+  const diffInSeconds = Math.floor((now - past) / 1000);
+  
+  if (diffInSeconds < 60) {
+      return `${diffInSeconds}s ago`;
+  } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes}m ago`;
+  } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours}h ago`;
+  } else if (diffInSeconds < 604800) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days}d ago`;
+  } else {
+      const weeks = Math.floor(diffInSeconds / 604800);
+      return `${weeks}w ago`;
+  }
+};
+
 
   return (
     <SafeAreaView style={[backgroundStyle, {width: '100%'}]}>
@@ -516,7 +541,17 @@ function NewNewsfeed({ navigation }) {
                 </View>
                 <View>
                   <View style={{flexDirection: 'row', paddingTop: 10}}>
-                    <Text style={[styles.tab,{backgroundColor: isDarkMode ? '#0C1427' : '#F4F4F5', color: isDarkMode ? '#d0d6e1' : '#000'}]}>Following</Text>
+                    {item.username !== username 
+                    ? 
+                    <TouchableOpacity>
+                      <Text style={[styles.tab,{backgroundColor: isDarkMode ? '#0C1427' : '#F4F4F5', color: isDarkMode ? '#d0d6e1' : '#000'}]}>Following</Text>
+                    </TouchableOpacity>
+                    :
+                    // <TouchableOpacity>
+                    //   <Text style={[styles.tab,{backgroundColor: isDarkMode ? '#0C1427' : '#F4F4F5', color: isDarkMode ? '#d0d6e1' : '#000'}]}>Following</Text>
+                    // </TouchableOpacity>
+                    null
+                    }
                     <TouchableOpacity onPress={() => refOptionsSheet.current.open()}>
                       <Text style={{fontSize: 20, marginHorizontal: 10}}>...</Text>
                     </TouchableOpacity>
@@ -570,7 +605,7 @@ function NewNewsfeed({ navigation }) {
                     <View style={{backgroundColor: isDarkMode ? '#0C1427' : '#F5F5F5', borderRadius: 50}}>
                       <MaterialIcons name='calendar-today' size={25} style={{padding: 14, margin: 'auto', borderRadius: 50, color:isDarkMode ? '#F4F4F5' : 'black'}}  ></MaterialIcons>
                     </View>
-                    <Text style={{textAlign: 'center', color: isDarkMode ? '#d0d6e1' : '#000'}}>2hr ago</Text>
+                    <Text style={{textAlign: 'center', color: isDarkMode ? '#d0d6e1' : '#000'}}>{formatTimeAgo(item.createdAt)}</Text>
                   </TouchableOpacity>
                 </View>
                 <View>
@@ -579,7 +614,7 @@ function NewNewsfeed({ navigation }) {
                     {/* <AntIcon name='hearto' size={25} style={{paddingHorizontal: 14, paddingVertical: 14, margin: 'auto' , borderRadius: 50, color:isDarkMode ? '#F4F4F5' : 'black'}}></AntIcon> */}
                     <AntIcon name={'hearto' } size={25} style={{paddingHorizontal: 14, paddingVertical: 14, margin: 'auto' , borderRadius: 50, color:isDarkMode ? '#F4F4F5' : 'black'}}></AntIcon>
                     </View>
-                    <Text style={{textAlign: 'center', color: isDarkMode ? '#d0d6e1' : '#000'}}>26.3k</Text>
+                    <Text style={{textAlign: 'center', color: isDarkMode ? '#d0d6e1' : '#000'}}>{item.like_count}</Text>
                   </TouchableOpacity>
                 </View>
                 <View>
@@ -588,7 +623,7 @@ function NewNewsfeed({ navigation }) {
                     <View style={{backgroundColor: isDarkMode ? '#0C1427' : '#F5F5F5', borderRadius: 50}}>
                       <IoIcon name='chatbubbles-outline' size={25} style={{padding: 14, margin: 'auto', borderRadius: 50, color:isDarkMode ? '#F4F4F5' : 'black'}}></IoIcon>
                     </View>
-                    <Text style={{textAlign: 'center', color: isDarkMode ? '#d0d6e1' : '#000'}}>973</Text>
+                    <Text style={{textAlign: 'center', color: isDarkMode ? '#d0d6e1' : '#000'}}>{item.commentsCount ? item.commentsCount : 0}</Text>
                   </TouchableOpacity>
                 </View>
                 <View>

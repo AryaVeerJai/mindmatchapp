@@ -343,7 +343,7 @@ const Following = ({userId}) => {
                                         />
                                     </View>
                                     <Text style={[FONTS.font,{flex:1,color:colors.title,fontSize:16},postView === "grid" && {marginBottom:8,fontSize:14}]}>{data.name}</Text>
-                                    <TouchableOpacity
+                                    {/* <TouchableOpacity
                                         onPress={()=> handleFollow(index)}
                                         style={{
                                             height:33,
@@ -357,9 +357,9 @@ const Following = ({userId}) => {
                                             backgroundColor:data.isFollow ? 'transparent' : COLORS.secondary
                                         }}
                                     >
-                                        {/* <Text style={{...FONTS.fontSm,color : data.isFollow  ? COLORS.danger : COLORS.white,...FONTS.fontBold}}>{data.isFollow ? 'UNFOLLOW' : 'FOLLOW'}</Text> */}
+                                        <Text style={{...FONTS.fontSm,color : data.isFollow  ? COLORS.danger : COLORS.white,...FONTS.fontBold}}>{data.isFollow ? 'UNFOLLOW' : 'FOLLOW'}</Text>
                                         <Text style={{...FONTS.fontSm,color : COLORS.white,...FONTS.fontBold}}>{data.isFollow ? 'UNFOLLOW' : 'FOLLOW'}</Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
                                 </View>
                             </View>
                         )

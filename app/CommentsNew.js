@@ -177,18 +177,41 @@ useEffect(() => {
     };
 }, [postId]);
 
+// const handleAddComment = async () => {
+//     try {
+//         await database().ref('comments/' + postId).push({
+//             comment: newComment,
+//             commentByUserId: userId,
+//             timestamp: database.ServerValue.TIMESTAMP
+//         });
+//         setNewComment('');
+//     } catch (error) {
+//         console.error('Error adding comment:', error);
+//     }
+// };
+
 const handleAddComment = async () => {
     try {
+        // Add the new comment to the 'comments' node
         await database().ref('comments/' + postId).push({
             comment: newComment,
             commentByUserId: userId,
             timestamp: database.ServerValue.TIMESTAMP
         });
+
+        // Increment the commentsCount in the corresponding post document
+        await database().ref('posts/' + postId + '/commentsCount').transaction((currentCount) => {
+            // Increment the current count by 1 or initialize to 1 if it doesn't exist
+            return (currentCount || 0) + 1;
+        });
+
+        // Clear the comment input field
         setNewComment('');
     } catch (error) {
         console.error('Error adding comment:', error);
     }
 };
+
 
 const [replyInputs, setReplyInputs] = useState({}); // State for reply input values
 
