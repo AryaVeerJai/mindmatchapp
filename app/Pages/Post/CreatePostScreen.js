@@ -95,29 +95,103 @@ const CreatePostScreen = () => {
   };
 
 
+  // const createPost = async () => {
+  //   try {
+  //     setLoading(true);
+  //     setUploadProgress(0); // Reset upload progress
+  
+  //     let postMediaUri = selectedMedia.path;
+  //     // Upload image to Firebase Storage
+  //     const filename = postMediaUri.substring(postMediaUri.lastIndexOf('/') + 1);
+  //     const storageRef = storage().ref(`postimages/${filename}`);
+  
+  //     const task = storageRef.putFile(postMediaUri);
+  
+  //     // Track upload progress
+  //     task.on('state_changed', (snapshot) => {
+  //       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //       setUploadProgress(progress);
+  //     });
+  
+  //     // Wait for upload to complete
+  //     await task;
+  
+  //     // Get download URL of the uploaded image
+  //     const postImageUrl = await storageRef.getDownloadURL();
+  
+  //     // Create post object
+  //     const postData = {
+  //       text: postText,
+  //       createdUserId: id,
+  //       createdBy: name,
+  //       createdByEmail: email,
+  //       createdAt: new Date().toISOString(),
+  //       postImage: postImageUrl,
+  //       userImage: imgUrl,
+  //       pot: potname,
+  //       postType: 'post',
+  //       username: username,
+  //       createdUserDetails: {
+  //         id: id,
+  //         displayName: name,
+  //         email: email,
+  //         // Add more user details as needed
+  //       }
+  //       // Add more fields as needed
+  //     };
+  
+  //     // Send post data to Realtime Database
+  //     await database().ref('posts').push(postData);
+
+  //     // Increment the number of posts in the user's document
+  //     await database().ref(`users/${id}/postsCount`).transaction((currentCount) => {
+  //       // Increment the current count by 1 or initialize to 1 if it doesn't exist
+  //       return (currentCount || 0) + 1;
+  //   });
+  
+  //     // Reset input field after successful post creation
+  //     setPostText('');
+  //     setPostImage('');
+  
+  //     // Provide feedback to the user
+  //     Alert.alert('Success', 'Post created successfully.');
+  //   } catch (error) {
+  //     console.error('Error creating post:', error);
+  //     Alert.alert('Error', 'Failed to create post. Please try again later.');
+  //   } finally {
+  //     setLoading(false);
+  //     setUploadProgress(0); // Reset upload progress
+  //   }
+  // };
+
+
   const createPost = async () => {
     try {
       setLoading(true);
       setUploadProgress(0); // Reset upload progress
   
-      let postMediaUri = selectedMedia.path;
-      // Upload image to Firebase Storage
-      const filename = postMediaUri.substring(postMediaUri.lastIndexOf('/') + 1);
-      const storageRef = storage().ref(`postimages/${filename}`);
+      let postImageUrl = null; // Initialize postImageUrl to null
   
-      const task = storageRef.putFile(postMediaUri);
+      if (selectedMedia && selectedMedia.path) {
+        let postMediaUri = selectedMedia.path;
+        const filename = postMediaUri.substring(postMediaUri.lastIndexOf('/') + 1);
+        const storageRef = storage().ref(`postimages/${filename}`);
   
-      // Track upload progress
-      task.on('state_changed', (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setUploadProgress(progress);
-      });
+        // Start uploading file to Firebase Storage
+        const task = storageRef.putFile(postMediaUri);
   
-      // Wait for upload to complete
-      await task;
+        // Track upload progress
+        task.on('state_changed', (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress);
+        });
   
-      // Get download URL of the uploaded image
-      const postImageUrl = await storageRef.getDownloadURL();
+        // Wait for upload to complete
+        await task;
+  
+        // Get download URL of the uploaded image
+        postImageUrl = await storageRef.getDownloadURL();
+      }
   
       // Create post object
       const postData = {
@@ -126,7 +200,7 @@ const CreatePostScreen = () => {
         createdBy: name,
         createdByEmail: email,
         createdAt: new Date().toISOString(),
-        postImage: postImageUrl,
+        postImage: postImageUrl, // This will be null if no image is uploaded
         userImage: imgUrl,
         pot: potname,
         postType: 'post',
@@ -136,33 +210,33 @@ const CreatePostScreen = () => {
           displayName: name,
           email: email,
           // Add more user details as needed
-        }
+        },
         // Add more fields as needed
       };
   
       // Send post data to Realtime Database
       await database().ref('posts').push(postData);
-
+  
       // Increment the number of posts in the user's document
       await database().ref(`users/${id}/postsCount`).transaction((currentCount) => {
-        // Increment the current count by 1 or initialize to 1 if it doesn't exist
-        return (currentCount || 0) + 1;
-    });
+        return (currentCount || 0) + 1; // Increment the current count by 1 or initialize to 1 if it doesn't exist
+      });
   
-      // Reset input field after successful post creation
+      // Reset input fields after successful post creation
       setPostText('');
-      setPostImage('');
+      setSelectedMedia(null); // Reset selected media
   
       // Provide feedback to the user
       Alert.alert('Success', 'Post created successfully.');
     } catch (error) {
       console.error('Error creating post:', error);
-      Alert.alert('Error', 'Failed to create post. Please try again later.');
+      Alert.alert('Error', `Failed to create post: ${error.message}. Please try again later.`);
     } finally {
       setLoading(false);
       setUploadProgress(0); // Reset upload progress
     }
   };
+  
   
   
 

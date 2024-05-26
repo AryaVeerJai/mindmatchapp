@@ -45,6 +45,7 @@ import Profile2 from "./Profile/Profile2";
 import OthersProfile from "./Post/OthersProfile";
 import Following from "./Profile/Following";
 import ProfileNew from "./Profile/ProfileNew";
+import SwipScreen from "./Explore/SwipScreen";
 // import LocationAdd from "./Post/LocationAdd";
 // import Components from "../Screens/components";
 
@@ -111,6 +112,7 @@ const Pages = (props) => {
         <StackComponent.Screen name={"ProfileNew"} component={ProfileNew} />
         <StackComponent.Screen name={"OtherProfile"} component={OthersProfile} />
         <StackComponent.Screen name={"Following"} component={Following} />
+        <StackComponent.Screen name={"SwipScreen"} component={SwipScreen} />
         {/* <StackComponent.Screen name={"LocationAdd"} component={LocationAdd} /> */}
         {/* <StackComponent.Screen name={"CreatePostScreen"} component={CreatePost} /> */}
       </StackComponent.Navigator>

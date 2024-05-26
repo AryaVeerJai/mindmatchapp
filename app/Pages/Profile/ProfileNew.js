@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, useColorScheme, ActivityIndicator, Dimensions, } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -21,165 +21,145 @@ import Stories from '../../components/Stories';
 
 
 const ProfileNew = ({ navigation }) => {
-  const {colors} = useTheme();
 
-  const refOptionsSheet = React.useRef ();
-  const refSuccessSheet = React.useRef();
-  const RBSheetReport = React.useRef();
-
+  const { colors } = useTheme();
+  const refOptionsSheet = useRef();
+  const refSuccessSheet = useRef();
+  const RBSheetReport = useRef();
   const { width } = Dimensions.get('window');
+  const isDarkMode = useColorScheme() === 'dark';
 
-      // Define state variables
-      const [imgUrl, setImgUrl] = useState(null);
-      const [coverImgUrl, setCoverImgUrl] = useState(null);
-      const [name, setName] = useState('');
-      const [username, setUsername] = useState('');
-      const [id, setid] = useState('');
-      const [bio, setBio] = useState('');
-      const [profileLink, setProfileLink] = useState('');
-      const [postsCount, setPostCount] = useState('');
-      const [loading, setLoading] = useState(false);
-      const [noOfFollowers, setNoOfFollowers] = useState('');
-      const [noOfFollowings, setNoOfFollowings] = useState('');
-  
-      // Use useFocusEffect hook to trigger the data loading when the screen comes into focus
-      useFocusEffect(
-          React.useCallback(() => {
-              // Define the asynchronous function to fetch user data
-              const getUser = async () => {
-                  setLoading(true); // Set loading state to true while fetching data
-                  try {
-                      // Fetch user data from Auth service
-                      let data = await Auth.getAccount();
-                      // Update state variables with fetched data
-                      setImgUrl(data.img);
-                      setCoverImgUrl(data.coverimg);
-                      setName(data.name);
-                      setUsername(data.username);
-                      setid(data.id);
-                      setBio(data.bio);
-                      setProfileLink(data.profileLink);
-                      setPostCount(data.postsCount);
-                      console.log("My Profile Data: ",data)
+  const [imgUrl, setImgUrl] = useState(null);
+  const [coverImgUrl, setCoverImgUrl] = useState(null);
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [id, setId] = useState('');
+  const [bio, setBio] = useState('');
+  const [profileLink, setProfileLink] = useState('');
+  const [postsCount, setPostCount] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [activeButton, setActiveButton] = useState(1);
+  const [userPosts, setUserPosts] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
 
-                      // Count followers and following
-                      const followersCount = Object.keys(data.followers || {}).length;
-                      const followingCount = Object.keys(data.following || {}).length;
-                      setNoOfFollowers(followersCount)
-                      setNoOfFollowings(followingCount)
-                      console.log("Followers:", followersCount);
-                      console.log("Following:", followingCount);
-                  } catch (error) {
-                      console.error('Error fetching user data:', error);
-                  } finally {
-                      setLoading(false); // Set loading state to false after data fetching is done (whether successful or not)
-                  }
-              };
-  
-              // Call the getUser function when the screen comes into focus
-              getUser();
-  
-              // Return a cleanup function (optional)
-              return () => {
-                  // This function is called when the component unmounts or when the effect is re-run
-                  // You can perform any cleanup here if needed
-              };
-          }, []) // Dependency array is empty, so this effect runs only once when the component mounts
-      );
-
-      const [activeButton, setActiveButton] = useState (1); // 1 for first button, 2 for second button
-
-      const handleButtonClick = (buttonNumber) => {
-        setActiveButton(buttonNumber);
+  useFocusEffect(
+    useCallback(() => {
+      const getUser = async () => {
+        setLoading(true);
+        try {
+          const data = await Auth.getAccount();
+          setImgUrl(data.img);
+          setCoverImgUrl(data.coverimg);
+          setName(data.name);
+          setUsername(data.username);
+          setId(data.id);
+          setBio(data.bio);
+          setProfileLink(data.profileLink);
+          setPostCount(data.postsCount);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        } finally {
+          setLoading(false);
+        }
       };
-  
-      // Determine the color scheme
-      const isDarkMode = useColorScheme() === 'dark';
-      // const navigation = useNavigation ();
 
+      getUser();
+    }, [])
+  );
 
-      const [userPosts, setUserPosts] = useState([]);
+  useEffect(() => {
+    if (!id) return;
 
-      useEffect(() => {
-        const fetchUserPosts = async () => {
-          try {
-            // Fetch posts data from Firebase
-            const postsRef = database().ref('posts');
-            const snapshot = await postsRef.once('value');
-    
-            // Convert snapshot to JavaScript object
-            const postsData = snapshot.val();
-            
-            // Filter posts to include only those created by the logged-in user
-            const filteredPosts = Object.values(postsData).filter(post => post.createdUserId === id);
-            
-            setUserPosts(filteredPosts);
-          } catch (error) {
-            console.error('Error fetching user posts:', error);
-          }
-        };
-    
-        fetchUserPosts();
-      }, [id]);
+    const fetchUserDetails = async () => {
+      try {
+        const userDetailsRef = database().ref(`users/${id}`);
+        const userDetailSnapshot = await userDetailsRef.once('value');
+        const userDetails = userDetailSnapshot.val();
+        setUserInfo(userDetails);
 
-      const postOption = () => {
-        return(
-            <View>
-                <List.Item
-                    style={{paddingHorizontal:15}}
-                    titleStyle={{...FONTS.font,fontSize:16,color:COLORS.danger}}
-                    onPress={() => {RBSheetReport.current.open();refOptionsSheet.current.close()}}
-                    title={"Report"}
-                    left={() => 
-                        <SvgXml
-                            style={{
-                                marginRight:5,
-                            }}
-                            height={20}
-                            width={20}
-                            fill={COLORS.danger}
-                            xml={ICONS.info}
-                        />
-                    }
-                />
-                <List.Item
-                    style={{paddingHorizontal:15}}
-                    titleStyle={{...FONTS.font,fontSize:16,color:colors.title}}
-                    onPress={() => {}}
-                    title={"Share"}
-                    left={() => 
-                        <SvgXml
-                            style={{
-                                marginRight:5,
-                            }}
-                            height={20}
-                            width={20}
-                            stroke={colors.title}
-                            xml={ICONS.share2}
-                        />
-                    }
-                />
-            </View>
-        )
-    }
+        const followersCount = userDetails?.followers ? Object.keys(userDetails.followers).length : 0;
+        const followingCount = userDetails?.following ? Object.keys(userDetails.following).length : 0;
 
-    const reportData = [
-      "It's spam",
-      "Nudity or sexual activity",
-      "Hate speech or symbols",
-      "I just dont't like it",
-      "Bullying or harassment",
-      "False information",
-      "Violence or dangerous organizations",
-      "Scam or fraud",
-      "Intellectual property violation",
-      "Sale of illegal or regulated goods",
-      "Suicide or self-injury",
-      "Eating disorders",
-      "Something else"
+        setFollowersCount(followersCount);
+        setFollowingCount(followingCount);
+      } catch (error) {
+        console.error('Error Fetching User Details', error);
+      }
+    };
+
+    const fetchUserPosts = async () => {
+      try {
+        const postsRef = database().ref('posts');
+        const snapshot = await postsRef.once('value');
+        const postsData = snapshot.val();
+        const filteredPosts = postsData ? Object.values(postsData).filter(post => post.createdUserId === id) : [];
+        filteredPosts.sort((a, b) => (new Date(b.createdAt) - new Date(a.createdAt)));
+        setUserPosts(filteredPosts);
+      } catch (error) {
+        console.error('Error fetching user posts:', error);
+      }
+    };
+
+    fetchUserDetails();
+    fetchUserPosts();
+  }, [id]);
+
+  const handleButtonClick = (buttonNumber) => {
+    setActiveButton(buttonNumber);
+  };
+
+  const postOption = () => (
+    <View>
+      <List.Item
+        style={{ paddingHorizontal: 15 }}
+        titleStyle={{ ...FONTS.font, fontSize: 16, color: COLORS.danger }}
+        onPress={() => { RBSheetReport.current.open(); refOptionsSheet.current.close(); }}
+        title="Report"
+        left={() => (
+          <SvgXml
+            style={{ marginRight: 5 }}
+            height={20}
+            width={20}
+            fill={COLORS.danger}
+            xml={ICONS.info}
+          />
+        )}
+      />
+      <List.Item
+        style={{ paddingHorizontal: 15 }}
+        titleStyle={{ ...FONTS.font, fontSize: 16, color: colors.title }}
+        onPress={() => { }}
+        title="Share"
+        left={() => (
+          <SvgXml
+            style={{ marginRight: 5 }}
+            height={20}
+            width={20}
+            stroke={colors.title}
+            xml={ICONS.share2}
+          />
+        )}
+      />
+    </View>
+  );
+
+  const reportData = [
+    "It's spam",
+    "Nudity or sexual activity",
+    "Hate speech or symbols",
+    "I just don't like it",
+    "Bullying or harassment",
+    "False information",
+    "Violence or dangerous organizations",
+    "Scam or fraud",
+    "Intellectual property violation",
+    "Sale of illegal or regulated goods",
+    "Suicide or self-injury",
+    "Eating disorders",
+    "Something else"
   ];
-
-      // console.log("userpost", userPosts)
 
 
   return (
@@ -339,34 +319,22 @@ const ProfileNew = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
 
-            {/* Stats Section */}
-            {/* <View style={styles.statsContainer}>
-                <Text style={styles.stat}>Posts: 100</Text>
-                <Text style={styles.stat}>Following: 500</Text>
-                <Text style={styles.stat}>Followers: 1000</Text>
-            </View> */}
-
             {/* states: like followers... */}
             <View style={styles.statsContainer}>
                     <TouchableOpacity style={[styles.statItem,{}]}>
-                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{postsCount ? postsCount : 0}</Text>
+                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{userPosts ? userPosts.length : 0}</Text>
                     <Text style={styles.statLabel}>Posts</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('ProfileFollow', {userId: id})} style={[styles.statItem, {borderRightWidth: 0.2, borderLeftWidth: 0.2, borderColor: '#E6EBEB', paddingHorizontal: 30}]}>
-                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{noOfFollowings ? noOfFollowings : 0}</Text>
+                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{followersCount ? followersCount : 0}</Text>
                     <Text style={styles.statLabel}>Following</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('ProfileFollow', {userId: id})} style={styles.statItem}>
-                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{noOfFollowers ? noOfFollowers : 0}</Text>
+                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{followingCount ? followingCount : 0}</Text>
                     <Text style={styles.statLabel}>Followers</Text>
                     </TouchableOpacity>
             </View>
         </View>
-      {/* Story Highlights */}
-      {/* <ScrollView horizontal style={styles.highlightsContainer}>
-        {/* Add icons for story highlights */}
-        {/* Add a button to view all stories */}
-      {/* </ScrollView> */}
         <View style={{backgroundColor: isDarkMode ? '#2F3131' : 'inherit', marginTop: 12, paddingBottom: 5 }}>
             {/* Story Highlights */}
             <View style={{paddingHorizontal: 20, paddingTop: 20,}}><Text style={{fontSize: 15}}>Recent Updates</Text></View>
@@ -464,7 +432,6 @@ const ProfileNew = ({ navigation }) => {
                   </View>
                   <View>
                     <View style={{flexDirection: 'row', paddingTop: 10}}>
-                      {/* <Text style={[styles.tab,{backgroundColor: isDarkMode ? '#0C1427' : '#F4F4F5', paddingHorizontal: 20, paddingVertical: 8, borderRadius: 15, alignItems: 'center', color: isDarkMode ? '#d0d6e1' : '#000'}]}>Following</Text> */}
                       <TouchableOpacity onPress={() => refOptionsSheet.current.open()}>
                         <Text style={{fontSize: 20, marginHorizontal: 10}}>...</Text>
                       </TouchableOpacity>
@@ -486,12 +453,7 @@ const ProfileNew = ({ navigation }) => {
               {item.postType === "polls" ? 
               (<View style={{width: '100%'}}>
                 <View>
-                  {/* {posts.textOptions.map((option, index)=>{
-                    <TouchableOpacity key={index}><Text>{option.text}</Text></TouchableOpacity>
-                  })} */}
                   {item.textOptions[0].text !== '' && item.textOptions.map((option, index) => {
-                    // console.log(option, "line no 321")
-                    // console.log(item.imageOptions, "line no 323")
                     return (
                       <TouchableOpacity key={index} style={{backgroundColor: '#0C1427', borderWidth: 0.8, borderColor: 'grey', paddingHorizontal: 20, paddingVertical: 10, marginTop: 10, borderRadius: 7}}>
                         <Text style={{color: 'white'}}>{option.text}</Text>
@@ -501,7 +463,6 @@ const ProfileNew = ({ navigation }) => {
                 </View>
                 <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-between', flexWrap: 'wrap'}}>
                   {item.imageOptions !== 'Not Added' && item.imageOptions.map((option, index) => {
-                    // console.log(option, "line no 321")
                     return (
                       <TouchableOpacity key={index} style={{backgroundColor: '#0C1427', marginTop: 10, }}>
                         <Image style={{flexGrow: 1, height: 120, width: width * 0.45, borderRadius: 10, borderWidth: 0.8, borderColor: 'grey',}} source={{uri: option.image}} />

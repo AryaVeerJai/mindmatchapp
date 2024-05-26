@@ -29,7 +29,8 @@ const CustomTabBarButton = () => {
         accessibilityLabel="Post"
         accessibilityHint="create the post"
         // onPress={()=> navigation.navigate('PostScreen')}
-        onPress={()=> navigation.navigate('CreatePostScreen')}
+        // onPress={()=> navigation.navigate('CreatePostScreen')}
+        onPress={()=> navigation.navigate('SwipScreen')}
         style={{
           height:50,
           width:50,
@@ -111,7 +112,7 @@ const BottomNavigation = () => {
             tabBarLabel:()=>(<></>)
           }}
         />
-        {/* <Tab.Screen
+        <Tab.Screen
           name="Search"
           component={SearchScreen} 
           options={{
@@ -133,8 +134,8 @@ const BottomNavigation = () => {
             ),
             tabBarLabel:()=>(<></>)
           }}
-        /> */}
-        <Tab.Screen
+        />
+        {/* <Tab.Screen
           name="SwipScreen"
           component={SwipScreen} 
           options={{
@@ -156,11 +157,19 @@ const BottomNavigation = () => {
             ),
             tabBarLabel:()=>(<></>)
           }}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           name="Post"
           // component={PostScreen} 
           component={CreatePostScreen } 
+          options={{
+            tabBarButton: props => <CustomTabBarButton {...props} />
+          }}
+        /> */}
+        <Tab.Screen
+          name="SwipScreen"
+          // component={PostScreen} 
+          component={SwipScreen } 
           options={{
             tabBarButton: props => <CustomTabBarButton {...props} />
           }}
