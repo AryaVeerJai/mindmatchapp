@@ -12,6 +12,7 @@ import { FONTS } from '../../constants/theme';
 import Header from '../../layout/Header';
 import { removeUser } from '../../Redux/reducer/user';
 import Auth from '../../Service/Auth';
+import auth from '@react-native-firebase/auth';
 
 const SettingsData = [
     {
@@ -57,11 +58,27 @@ const Settings = (props) => {
     const {colors} = useTheme();
     const dispatch = useDispatch();
 
+    // const handleLogout = async () => {
+    //     dispatch(removeUser());
+    //     Auth.logout();
+    //     props.navigation.navigate('Onboarding');
+    // }
+
     const handleLogout = async () => {
-        dispatch(removeUser());
-        Auth.logout();
-        props.navigation.navigate('Onboarding');
-    }
+        try {
+            // Sign out from Firebase Authentication
+            await auth().signOut();
+            Auth.logout();
+            // Dispatch the action to remove user from the Redux store or context
+            dispatch(removeUser());
+    
+            // Navigate to the Onboarding screen
+            props.navigation.navigate('Onboarding');
+        } catch (error) {
+            console.error('Error logging out: ', error);
+            // Optionally, handle the error (e.g., show a toast message)
+        }
+    };
     
     return (
         <SafeAreaView style={{flex:1,backgroundColor:colors.background}}>

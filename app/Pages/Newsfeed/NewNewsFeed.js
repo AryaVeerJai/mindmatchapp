@@ -39,6 +39,7 @@ import { SvgXml } from "react-native-svg";
 import { COLORS, FONTS, ICONS, IMAGES, SIZES } from "../../constants/theme";
 import CreateSheet from '../../components/ActionSheet/CreateSheet';
 import Auth from '../../Service/Auth';
+import auth from '@react-native-firebase/auth';
 import { formatDistanceToNow } from 'date-fns';
 
 function Section({ children, title }) {
@@ -244,47 +245,110 @@ function NewNewsfeed({ navigation }) {
     return dateB - dateA;
   });
 
-  const handleLike = (postId) => {
-    // Get the current user ID from your authentication system (replace 'userId' with actual user ID)
-    // console.log(username, '244')
+  // const handleLike = (postId) => {
+  //   // Get the current user ID from your authentication system (replace 'userId' with actual user ID)
+  //   // console.log(username, '244')
     
-    const userId = username; // Replace 'user123' with actual user ID
+  //   const userId = username; // Replace 'user123' with actual user ID
     
-    // const username = 'username'; // Replace 'username' with actual username
+  //   // const username = 'username'; // Replace 'username' with actual username
     
-    // Get the current timestamp in ISO 8601 format
-    const timestamp = new Date().toISOString();
+  //   // Get the current timestamp in ISO 8601 format
+  //   const timestamp = new Date().toISOString();
 
-    // Check if the user has already liked the post
-    database().ref(`posts/${postId}/likes/${userId}`).once('value', snapshot => {
-      const isLiked = snapshot.val();
+  //   // Check if the user has already liked the post
+  //   database().ref(`posts/${postId}/likes/${userId}`).once('value', snapshot => {
+  //     const isLiked = snapshot.val();
       
-      // Toggle like status
-      if (isLiked) {
-        // User already liked the post, unlike it
-        database().ref(`posts/${postId}/likes/${userId}`).remove(); // Remove user's like
+  //     // Toggle like status
+  //     if (isLiked) {
+  //       // User already liked the post, unlike it
+  //       database().ref(`posts/${postId}/likes/${userId}`).remove(); // Remove user's like
         
-        // Remove like information for the user
-        database().ref(`posts/${postId}/like_info`).orderByChild('liked_by').equalTo(userId).once('value', snapshot => {
-          snapshot.forEach(childSnapshot => {
-            database().ref(`posts/${postId}/like_info/${childSnapshot.key}`).remove(); // Remove like info
-          });
-        });
+  //       // Remove like information for the user
+  //       database().ref(`posts/${postId}/like_info`).orderByChild('liked_by').equalTo(userId).once('value', snapshot => {
+  //         snapshot.forEach(childSnapshot => {
+  //           database().ref(`posts/${postId}/like_info/${childSnapshot.key}`).remove(); // Remove like info
+  //         });
+  //       });
         
-        // Decrement the total count of likes
-        database().ref(`posts/${postId}/like_count`).transaction(count => count - 1);
-      } else {
-        // User hasn't liked the post, like it
-        database().ref(`posts/${postId}/likes/${userId}`).set(true); // Set user's like
+  //       // Decrement the total count of likes
+  //       database().ref(`posts/${postId}/like_count`).transaction(count => count - 1);
+  //     } else {
+  //       // User hasn't liked the post, like it
+  //       database().ref(`posts/${postId}/likes/${userId}`).set(true); // Set user's like
         
-        // Save like information (username and timestamp) under the post
-        database().ref(`posts/${postId}/like_info`).push({ liked_by: userId, timestamp });
+  //       // Save like information (username and timestamp) under the post
+  //       database().ref(`posts/${postId}/like_info`).push({ liked_by: userId, timestamp });
         
-        // Increment the total count of likes
-        database().ref(`posts/${postId}/like_count`).transaction(count => (count || 0) + 1);
-      }
-    });
+  //       // Increment the total count of likes
+  //       database().ref(`posts/${postId}/like_count`).transaction(count => (count || 0) + 1);
+  //     }
+  //   });
+  // };
+
+  const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func.apply(this, args);
+      }, wait);
+    };
   };
+
+
+// Function to get the authenticated user's ID
+const getUserId = () => {
+  const user = auth().currentUser;
+  return user ? user.uid : null;
+};
+
+// Example usage in your like handler
+const handleLike = debounce((postId) => {
+  const userId = getUserId(); // Get the authenticated user ID
+  if (!userId) {
+    console.error('User is not authenticated');
+    return;
+  }
+
+  const timestamp = new Date().toISOString();
+  const likesRef = database().ref(`posts/${postId}/likes/${userId}`);
+  const likeInfoRef = database().ref(`posts/${postId}/like_info`);
+  const likeCountRef = database().ref(`posts/${postId}/like_count`);
+
+  likesRef.once('value')
+    .then(snapshot => {
+      const isLiked = snapshot.val();
+
+      if (isLiked) {
+        return likesRef.remove().then(() => {
+          return likeInfoRef.orderByChild('liked_by').equalTo(userId).once('value')
+            .then(snapshot => {
+              const updates = {};
+              snapshot.forEach(childSnapshot => {
+                updates[childSnapshot.key] = null;
+              });
+              return likeInfoRef.update(updates);
+            });
+        }).then(() => {
+          return likeCountRef.transaction(count => (count || 0) - 1);
+        });
+      } else {
+        return likesRef.set(true).then(() => {
+          return likeInfoRef.push({ liked_by: userId, timestamp });
+        }).then(() => {
+          return likeCountRef.transaction(count => (count || 0) + 1);
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error handling like:', error);
+    });
+}, 300); // 300ms debounce delay
+
+
+
 
   const reportData = [
     "It's spam",

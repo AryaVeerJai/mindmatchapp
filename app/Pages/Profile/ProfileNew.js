@@ -326,11 +326,11 @@ const ProfileNew = ({ navigation }) => {
                     <Text style={styles.statLabel}>Posts</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('ProfileFollow', {userId: id})} style={[styles.statItem, {borderRightWidth: 0.2, borderLeftWidth: 0.2, borderColor: '#E6EBEB', paddingHorizontal: 30}]}>
-                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{followersCount ? followersCount : 0}</Text>
+                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{followingCount ? followingCount : 0}</Text>
                     <Text style={styles.statLabel}>Following</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('ProfileFollow', {userId: id})} style={styles.statItem}>
-                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{followingCount ? followingCount : 0}</Text>
+                    <Text style={[styles.statNumber,{ color: isDarkMode ? '#fff' : '#000' }]}>{followersCount ? followersCount : 0}</Text>
                     <Text style={styles.statLabel}>Followers</Text>
                     </TouchableOpacity>
             </View>

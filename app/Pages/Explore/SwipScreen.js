@@ -96,11 +96,13 @@ const SwipScreen = () => {
 
     // Check if fetchCurrentUser is not null or undefined before accessing its properties
     const currentUserLikes = fetchCurrentUser ? fetchCurrentUser.userlikes : [];
-    console.log("Current User Like List", currentUserLikes)
+    // console.log("Current User Like List", currentUserLikes)
     
     // You might want to render a loading indicator or handle the component's rendering differently until fetchCurrentUser is available
-    const usersNotInLikedUserId = fetchCurrentUser ? users.filter(user => !currentUserLikes.hasOwnProperty(user.id)) : [];
-    console.log("Final Liked List", usersNotInLikedUserId)
+    // const usersNotInLikedUserId = fetchCurrentUser ? users.filter(user => !currentUserLikes.hasOwnProperty(user.id)) : [];
+    const usersNotInLikedUserId = fetchCurrentUser ? users.filter(user => !currentUserLikes || !currentUserLikes.hasOwnProperty(user.id)) : [];
+
+    // console.log("Final Liked List", usersNotInLikedUserId)
     
 
     const onSwipedLeft = (cardIndex) => {
