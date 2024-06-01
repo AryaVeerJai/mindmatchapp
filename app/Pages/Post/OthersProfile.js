@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, useColorScheme, ActivityIndicator, } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, useColorScheme, ActivityIndicator, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -21,6 +21,7 @@ import { SvgXml } from "react-native-svg";
 
 
 const OthersProfile = ({ navigation , route }) => {
+  const { width } = Dimensions.get('window');
   const {colors} = useTheme();
 
     const { userId } = route.params;
