@@ -166,6 +166,12 @@ const CreatePostScreen = () => {
 
 
   const createPost = async () => {
+
+    if (!postText.trim()) {
+    Alert.alert('Error', 'Post text cannot be empty.');
+    return;
+  }
+
     try {
       setLoading(true);
       setUploadProgress(0); // Reset upload progress

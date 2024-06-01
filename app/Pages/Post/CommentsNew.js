@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, TextInput, Image, Dimensions,  } from 'react-native';
 import { SvgXml } from "react-native-svg";
-import { COLORS, FONTS, ICONS, IMAGES, SIZES } from "./constants/theme";
+import { COLORS, FONTS, ICONS, IMAGES, SIZES } from "../../constants/theme";
 import { useFocusEffect, useNavigation, useTheme } from '@react-navigation/native';
 import firebase from 'firebase/app';
 import database from '@react-native-firebase/database';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import Auth from './Service/Auth';
+import Auth from '../../Service/Auth';
+import Toast from 'react-native-simple-toast';
 
 
 
@@ -191,6 +192,12 @@ useEffect(() => {
 // };
 
 const handleAddComment = async () => {
+    if (!newComment.trim()) {
+        Toast.show('Please Add a comment!');
+        // If newComment is empty or just whitespace, do nothing
+        return;
+    }
+
     try {
         // Add the new comment to the 'comments' node
         await database().ref('comments/' + postId).push({
@@ -339,7 +346,7 @@ return (
                     
                 {postData.postImage || postData.pollDiscriptionImage  ?
                     <Image
-                  source={postData.postImage ? {uri : postData.postImage} : postData.pollDiscriptionImage ? {uri : postData.pollDiscriptionImage} : require('../painting.jpg')}
+                  source={postData.postImage ? {uri : postData.postImage} : postData.pollDiscriptionImage ? {uri : postData.pollDiscriptionImage} : require('../../../painting.jpg')}
                   style={{width: '100%', height: 360, borderRadius: 10, marginRight: 15}}
                   /> : null
                 }

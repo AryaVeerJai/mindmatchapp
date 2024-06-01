@@ -40,7 +40,7 @@ import CreatePollScreen from "./Post/CreatePollScreen";
 import ToggleStyle3 from "./Post/ToogleSwitchTest";
 import LookingFor from "./Post/LookingFor";
 import NewCreatePollScreen from "./Post/NewCreatePollScreen";
-import CommentsNew from "../CommentsNew";
+import CommentsNew from "./Post/CommentsNew";
 import Profile2 from "./Profile/Profile2";
 import OthersProfile from "./Post/OthersProfile";
 import Following from "./Profile/Following";
@@ -107,7 +107,7 @@ const Pages = (props) => {
         <StackComponent.Screen name={"CreatePollScreen"} component={NewCreatePollScreen} />
         <StackComponent.Screen name={"ToggleSwitchTest"} component={ToggleStyle3} />
         <StackComponent.Screen name={"LookingFor"} component={LookingFor} />
-        <StackComponent.Screen name={"CommensNew"} component={CommentsNew} />
+        <StackComponent.Screen name={"CommentsNew"} component={CommentsNew} />
         <StackComponent.Screen name={"Profile2"} component={Profile2} />
         <StackComponent.Screen name={"ProfileNew"} component={ProfileNew} />
         <StackComponent.Screen name={"OtherProfile"} component={OthersProfile} />

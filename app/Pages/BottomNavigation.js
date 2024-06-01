@@ -14,6 +14,8 @@ import Newsfeed from "./Newsfeed/Newsfeed";
 import CreatePostScreen from "./Post/CreatePostScreen";
 import NewNewsfeed from "./Newsfeed/NewNewsFeed";
 import SwipScreen from "./Explore/SwipScreen";
+import IoIcon from 'react-native-vector-icons/Ionicons';
+// import MainSlider from "../components/MainSlider/MainSlider";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,11 +44,12 @@ const CustomTabBarButton = () => {
           backgroundColor:'#55288E',
         }}
         >
-        <SvgXml
+        {/* <SvgXml
           height={20}
           width={20}
           xml={ICONS.plus}
-        />
+        /> */}
+        <IoIcon size={30} name="compass-outline"/>
       </TouchableOpacity>
     </View>
   )
@@ -115,6 +118,7 @@ const BottomNavigation = () => {
         <Tab.Screen
           name="Search"
           component={SearchScreen} 
+          // component={MainSlider} 
           options={{
             tabBarIconStyle:{
               top: Platform.OS === 'ios' ? 12 : 0,

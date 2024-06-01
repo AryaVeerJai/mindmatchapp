@@ -332,12 +332,18 @@ export const IMAGES = {
 	// flyMan : require('../../apps/education_app/assets/images/flyMan.png'),
 	//education app images end
 	
-	//dating app images start
-	// datingPic1 : require('../../apps/dating_app/assets/images/cards/pic1.png'), 
-	// datingPic2 : require('../../apps/dating_app/assets/images/cards/pic2.png'), 
-	// datingPic3 : require('../../apps/dating_app/assets/images/cards/pic3.png'), 
-	// datingPic4 : require('../../apps/dating_app/assets/images/cards/pic4.png'), 
-	// datingPic5 : require('../../apps/dating_app/assets/images/cards/pic5.png'), 
+	// dating app images start
+	// datingPic1 : require('../../app/assets/dating_app/assets/images/cards/pic1.png'), 
+	datingPic1 : require('../assets/images/global/stories/pic1.png'), 
+	datingPic2 : require('../assets/images/global/stories/pic2.png'), 
+	datingPic3 : require('../assets/images/global/stories/pic3.png'), 
+	datingPic4 : require('../assets/images/global/stories/pic4.png'), 
+	datingPic5 : require('../assets/images/global/stories/pic5.png'), 
+	// datingPic1 : require('../assets/dating_app/assets/images/cards/pic1.png'), 
+	// datingPic2 : require('../assets/dating_app/assets/images/cards/pic2.png'), 
+	// datingPic3 : require('../assets/dating_app/assets/images/cards/pic3.png'), 
+	// datingPic4 : require('../assets/dating_app/assets/images/cards/pic4.png'), 
+	// datingPic5 : require('../assets/dating_app/assets/images/cards/pic5.png'), 
 	// datingLike1 : require('../../apps/dating_app/assets/images/liked/pic1.png'), 
 	// datingLike2 : require('../../apps/dating_app/assets/images/liked/pic2.png'), 
 	// datingLike3 : require('../../apps/dating_app/assets/images/liked/pic3.png'), 

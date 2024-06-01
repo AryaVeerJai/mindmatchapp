@@ -13,6 +13,7 @@ import Ripple from "react-native-material-ripple";
 import {
   SafeAreaView,
   ScrollView,
+  RefreshControl,
   StatusBar,
   StyleSheet,
   Text,
@@ -390,6 +391,17 @@ const formatTimeAgo = (timestamp) => {
   }
 };
 
+const [refreshing, setRefreshing] = useState(false);
+
+const onRefresh = useCallback(() => {
+  setRefreshing(true);
+
+  // Simulate a network request or any async operation
+  setTimeout(() => {
+    setRefreshing(false);
+  }, 2000);
+}, []);
+
 
   return (
     <SafeAreaView style={[backgroundStyle, {width: '100%'}]}>
@@ -487,8 +499,8 @@ const formatTimeAgo = (timestamp) => {
                     position:'absolute',
                     height:55,
                     width:55,
-                    backgroundColor:COLORS.primary,
-                    // backgroundColor:'#55288E',
+                    // backgroundColor:COLORS.primary,
+                    backgroundColor:'#55288E',
                     zIndex:9,
                     bottom: 70,
                     right:10,
@@ -509,7 +521,10 @@ const formatTimeAgo = (timestamp) => {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <View>
-        <ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle}>
+        <ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle} 
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
           {loading && ( // Render loading animation if loading is true
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#0000ff" />
@@ -689,7 +704,7 @@ const formatTimeAgo = (timestamp) => {
                 </View>
                 <View>
                   {/* <TouchableOpacity  onPress={()=> navigation.navigate('Comments')}  style={{marginRight: 0}}> */}
-                  <TouchableOpacity  onPress={()=> navigation.navigate('CommensNew', { postId: item.id})}  style={{marginRight: 0}}>
+                  <TouchableOpacity  onPress={()=> navigation.navigate('CommentsNew', { postId: item.id})}  style={{marginRight: 0}}>
                     <View style={{backgroundColor: isDarkMode ? '#0C1427' : '#F5F5F5', borderRadius: 50}}>
                       <IoIcon name='chatbubbles-outline' size={25} style={{padding: 14, margin: 'auto', borderRadius: 50, color:isDarkMode ? '#F4F4F5' : 'black'}}></IoIcon>
                     </View>
